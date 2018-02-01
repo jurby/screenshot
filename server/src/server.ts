@@ -21,12 +21,13 @@ if (!NUM_BROWSERS)
 const browserOptions = {
   args: [
     '--no-sandbox',
-    '--disable-setuid-sandbox'
+    '--disable-setuid-sandbox',
+    //'--disable-gpu',
   ]
 }
 
 let browser
-if(PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === true && BROWSER_WS_ENDPOINT.length > 0) {
+if(BROWSER_WS_ENDPOINT.length > 0) {
   console.log('Start Browser in mode "connect"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
   browser = new Browser([...Array(NUM_BROWSERS)].map(_ => puppeteer.connect({
       browserWSEndpoint: BROWSER_WS_ENDPOINT,
