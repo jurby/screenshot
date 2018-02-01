@@ -6,6 +6,7 @@ import Browser from './browser'
 import { getProperitiesFromImg, getProperitiesFromPdf, isValidUrl, transformHeaders } from './requestHelper'
 
 const NUM_BROWSERS = parseInt(process.argv[2], 10)
+const BROSER_WS_ENDPOINT = `${process.env.BROSER_WS_ENDPOINT || ''}`
 
 if (!NUM_BROWSERS)
   throw new Error('Need to specify a non zero NUM_BROWSERS')
@@ -23,7 +24,14 @@ const browserOptions = {
   ]
 }
 
-const browser = new Browser([...Array(NUM_BROWSERS)].map(_ => puppeteer.launch(browserOptions)))
+if(PUPPETEER_SKIP_CHROMIUM_DOWNLOAD.length > 0 && BROSER_WS_ENDPOINT.length > 0) {
+  const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.connect({
+    ...browserOptions,
+    browserWSEndpoint: BROSER_WS_ENDPOINT,
+  )))
+} else {
+  const browser = new Browser([...Array(NUM_BROWSERS)].map(_ => puppeteer.launch(browserOptions)))
+}
 
 const app  = express()
 const port = 3000
