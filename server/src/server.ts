@@ -26,14 +26,15 @@ const browserOptions = {
   ]
 }
 
-const createBrowser = (numBrowsers = 1 /*NUM_BROWSERS*/) => {
+const createBrowser = (numBrowsers = NUM_BROWSERS) => {
   let browser
   if(BROWSER_WS_ENDPOINT.length > 0) {
     console.log('Start Browser in mode "connect"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
-    browser = new Browser([...Array(numBrowsers)].map(_ => puppeteer.connect({
+    browser = new Browser([...Array(1)].map(_ => puppeteer.connect({
         browserWSEndpoint: BROWSER_WS_ENDPOINT,
     })))
   } else {
+    if(browser !== null) return browser // return instances
     console.log('Start Browser in mode "launch"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
     browser = new Browser([...Array(numBrowsers)].map(_ => puppeteer.launch(browserOptions)))
   }
