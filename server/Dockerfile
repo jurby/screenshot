@@ -1,5 +1,8 @@
 FROM node:8-slim
 
+WORKDIR /app
+ADD . /app
+
 # See https://crbug.com/795759
 RUN apt-get update && apt-get install -yq libgconf-2-4
 
@@ -26,15 +29,15 @@ RUN chmod +x /usr/local/bin/dumb-init
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Install puppeteer so it's available in the container.
-RUN npm i puppeteer
+#RUN npm i puppeteer
 RUN npm install
-RUN npm run-script build
+RUN npm run build
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /node_modules
+    && chown -R pptruser:pptruser /app/node_modules
 
 # Run everything after as non-privileged user.
 USER pptruser
