@@ -28,7 +28,7 @@ const browserOptions = {
 if(PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === true && BROWSER_WS_ENDPOINT.length > 0) {
   const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.connect({
       browserWSEndpoint: BROWSER_WS_ENDPOINT,
-  )))
+  })))
 } else {
   const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.launch(browserOptions)))
 }
