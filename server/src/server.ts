@@ -25,12 +25,15 @@ const browserOptions = {
   ]
 }
 
+let browser
 if(PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === true && BROWSER_WS_ENDPOINT.length > 0) {
-  const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.connect({
+  console.log('Start Browser in mode "connect"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
+  browser = new Browser([...Array(NUM_BROWSERS)].map(_ => puppeteer.connect({
       browserWSEndpoint: BROWSER_WS_ENDPOINT,
   })))
 } else {
-  const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.launch(browserOptions)))
+  console.log('Start Browser in mode "launch"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
+  browser = new Browser([...Array(NUM_BROWSERS)].map(_ => puppeteer.launch(browserOptions)))
 }
 
 const app  = express()
