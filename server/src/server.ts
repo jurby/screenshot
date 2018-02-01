@@ -6,7 +6,7 @@ import Browser from './browser'
 import { getProperitiesFromImg, getProperitiesFromPdf, isValidUrl, transformHeaders } from './requestHelper'
 
 const NUM_BROWSERS = parseInt(process.argv[2], 10)
-const BROSER_WS_ENDPOINT = `${process.env.BROSER_WS_ENDPOINT || ''}`
+const BROWSER_WS_ENDPOINT = `${process.env.BROWSER_WS_ENDPOINT || ''}`
 const PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD || false
 
 if (!NUM_BROWSERS)
@@ -25,9 +25,9 @@ const browserOptions = {
   ]
 }
 
-if(PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === true && BROSER_WS_ENDPOINT.length > 0) {
+if(PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === true && BROWSER_WS_ENDPOINT.length > 0) {
   const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.connect({
-      browserWSEndpoint: BROSER_WS_ENDPOINT,
+      browserWSEndpoint: BROWSER_WS_ENDPOINT,
   )))
 } else {
   const browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.launch(browserOptions)))
