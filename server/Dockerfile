@@ -33,6 +33,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 RUN npm install
 RUN npm run-script build
 
+# Add pptr user.
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
@@ -45,7 +46,5 @@ USER pptruser
 EXPOSE 9229
 EXPOSE 3000
 
-ENTRYPOINT ["dumb-init", "--"]
-#CMD ["google-chrome-unstable"]
 # start server with 20 browsers in the pool
 CMD ["node", "dist/server.js", "20"]
