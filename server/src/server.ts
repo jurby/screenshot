@@ -6,7 +6,7 @@ import Browser from './browser'
 import { getProperitiesFromImg, getProperitiesFromPdf, isValidUrl, transformHeaders } from './requestHelper'
 
 const NUM_BROWSERS = parseInt(process.argv[2], 10)
-const BROWSER_WS_ENDPOINT = `${process.env.BROWSER_WS_ENDPOINT || ''}`
+const BROWSER_WS_ENDPOINT = process.env.BROWSER_WS_ENDPOINT || ''
 const PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD || false
 
 if (!NUM_BROWSERS)
