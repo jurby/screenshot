@@ -26,15 +26,18 @@ const browserOptions = {
   ]
 }
 
-let browser
-if(BROWSER_WS_ENDPOINT.length > 0) {
-  console.log('Start Browser in mode "connect"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
-  browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.connect({
-      browserWSEndpoint: BROWSER_WS_ENDPOINT,
-  })))
-} else {
-  console.log('Start Browser in mode "launch"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
-  browser = new Browser([...Array(NUM_BROWSERS)].map(async _ => await puppeteer.launch(browserOptions)))
+const createBrowser = (numBrowsers = 1 /*NUM_BROWSERS*/) => {
+  let browser
+  if(BROWSER_WS_ENDPOINT.length > 0) {
+    console.log('Start Browser in mode "connect"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
+    browser = new Browser([...Array(numBrowsers)].map(_ => puppeteer.connect({
+        browserWSEndpoint: BROWSER_WS_ENDPOINT,
+    })))
+  } else {
+    console.log('Start Browser in mode "launch"...', PUPPETEER_SKIP_CHROMIUM_DOWNLOAD, BROWSER_WS_ENDPOINT)
+    browser = new Browser([...Array(numBrowsers)].map(_ => puppeteer.launch(browserOptions)))
+  }
+  return browser
 }
 
 const app  = express()
@@ -65,6 +68,7 @@ app.get('/png', async (req: Request, res: Response) => {
   const headers = transformHeaders(req.rawHeaders)
 
   try {
+    const browser = createBrowser()
     const picture = await browser.screenshot(headers, url, options, viewport, waitUntil)
     res.status(200)
       .set('Content-type', 'image/png')
@@ -95,6 +99,7 @@ app.get('/jpeg', async (req: Request, res: Response): Promise<void> => {
   const headers = transformHeaders(req.rawHeaders)
 
   try {
+    const browser = createBrowser()
     const picture = await browser.screenshot(headers, url, options, viewport, waitUntil)
     res.status(200)
       .set('Content-type', 'image/jpeg')
@@ -123,6 +128,7 @@ app.get('/pdf', async (req: Request, res: Response): Promise<void> => {
   const headers = transformHeaders(req.rawHeaders)
 
   try {
+    const browser = createBrowser()
     const pdfBuffer = await browser.pdf(headers, url, viewport, pdfOptions, waitUntil)
     res.status(200)
       .set('Content-type', 'application/pdf')
